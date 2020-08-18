@@ -1,0 +1,3 @@
+# Autosave file for the LC20
+$(DEV):Run.VAL
+$(DEV):SetFlowRate.VAL

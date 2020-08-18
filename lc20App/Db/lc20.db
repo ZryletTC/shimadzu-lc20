@@ -1,0 +1,197 @@
+# 2015-2-25
+# These records handle the basic functionality of an LC-20 pump.
+# Flow readback, and control
+
+
+# Controls
+# Start/stop pump
+record(bo, "$(DEV):Run"){
+	field(OMSL, "supervisory")
+	field(DTYP, "stream")
+	field(OUT, "@lc20.proto run_co $(PORT)")
+	field(ZNAM, "Stop Pump")
+	field(ONAM, "Run Pump")
+}
+# Clear errors
+record(bo, "$(DEV):ClearError"){
+	field(OMSL, "supervisory")
+	field(DTYP, "stream")
+	field(OUT, "@lc20.proto clear_error $(PORT)")
+}
+#Set pumping mode
+#record(ao, "$(DEV):PumpMode"){
+	#field(OMSL, "supervisory")
+	#field(DTYP, "stream")
+	#field(OUT, "@lc20.proto mode $(PORT)")
+	#field(LINR, "NO CONVERSION")
+#}
+
+# Flow rate
+record(ao, "$(DEV):SetFlowRate"){
+	field(OMSL, "supervisory")
+	field(DTYP, "stream")
+	field(OUT, "@lc20.proto flowsp_co $(PORT)")
+	field(LINR, "NO CONVERSION")
+	field(FLNK, "$(DEV):FlowRateSP.PROC")
+}
+
+# Solenoid valves
+record(ao, "$(DEV):ToggleSV"){
+	field(OMSL, "supervisory")
+	field(LINR, "NO CONVERSION")
+	field(DTYP, "stream")
+	field(OUT, "@lc20.proto sv_co $(PORT)")
+	field(FLNK, "$(DEV):RVA")
+}
+# Pressure
+
+# Pressure limits
+record(ao, "$(DEV):SetMaxPress"){
+	field(OMSL, "supervisory")
+	field(LINR, "NO CONVERSION")
+	field(DTYP, "stream")
+	field(OUT, "@lc20.proto setMaxPress $(PORT)")
+	field(FLNK, "$(DEV):MaxPress")
+}
+
+record(ao, "$(DEV):SetMinPress"){
+	field(OMSL, "supervisory")
+	field(LINR, "NO CONVERSION")
+	field(DTYP, "stream")
+	field(OUT, "@lc20.proto setMinPress $(PORT)")
+	field(FLNK, "$(DEV):MinPress")
+}
+
+#Readbacks
+# State
+record(mbbi, "$(DEV):Status"){
+	field(DTYP, "stream")
+	field(INP, "@lc20.proto status $(PORT)")
+	field(SCAN, "1 second")
+	field(ZRVL, "1")
+	field(ONVL, "257")
+	field(THVL, "321") #pump error and activating
+	field(FRVL, "65") #pump error and ready
+	field(ZRST, "Pump ready")
+	field(ONST, "Pump running")
+	field(THST, "Pump error")
+	field(FRST, "Pump error")
+	field(THSV, "MAJOR")
+	field(FRSV, "MAJOR")
+	field(UNSV, "MAJOR")
+}
+
+record(mbbi, "$(DEV):Error"){
+	field(DTYP, "stream")
+	field(INP, "@lc20.proto error $(PORT)")
+	field(SCAN, "5 second")
+	field(ZRVL, "0")
+	field(ONVL, "48")
+	field(ZRST, "No error")
+	field(ONST, "Over pressure")
+}
+
+# Flow
+# Setpoint readback
+record(ai, "$(DEV):FlowRateSP"){
+	field(DTYP, "stream")
+	field(INP, "@lc20.proto flowsp_rb $(PORT)")
+	field(LINR, "NO CONVERSION")
+	field(EGU, "mL")
+}
+# Pump mode RB
+record(ai, "$(DEV):PumpModeRB"){
+	field(DTYP, "stream")
+	field(INP, "@lc20.proto mode_rb $(PORT)")
+	field(LINR, "NO CONVERSION")
+	field(SCAN, "5 second")
+}
+
+# Flowmeter rate
+record(ai, "$(DEV):FlowRate"){
+	field(DTYP, "stream")
+	field(INP, "@lc20.proto flow_rb $(PORT)")
+	field(LINR, "NO CONVERSION")
+	field(SCAN, "1 second")
+	field(FLNK, "$(DEV):Pressure")
+	field(EGU, "mL/min")
+}
+
+# Pressure
+record(ai, "$(DEV):Pressure"){
+	field(DTYP, "stream")
+	field(INP, "@lc20.proto press_rb $(PORT)")
+	field(LINR, "NO CONVERSION")
+	field(FLNK, "$(DEV):FlowRateSP")
+}
+
+# Max Pressure Readback
+record(ai, "$(DEV):MaxPress"){
+	field(DTYP, "stream")
+	field(INP, "@lc20.proto rbMaxPress $(PORT)")
+	field(LINR, "NO CONVERSION")
+	field(PINI, "YES")
+}
+
+# Min Pressure Readback
+record(ai, "$(DEV):MinPress"){
+	field(DTYP, "stream")
+	field(INP, "@lc20.proto rbMinPress $(PORT)")
+	field(LINR, "NO CONVERSION")
+	field(PINI, "YES")
+}
+#Pressure units
+record(mbbi, "$(DEV):PressureUnits"){
+	field(PINI, "YES")
+	field(PHAS, "0") #phase ensures this runs before the forwarder
+	field(DTYP, "stream")
+	field(INP, "@lc20.proto press $(PORT)")
+	field(ZRVL, "0")
+	field(ONVL, "1")
+	field(TWVL, "2")
+	field(THVL, "3")
+	field(ZRST, "kgf/cm^2")
+	field(ONST, "psi")
+	field(TWST, "MPa")
+	field(THST, "bar")
+	field(UNSV, "MAJOR")
+}
+
+record(stringout, "$(DEV):PressureUnitsForwarder"){
+	field(PINI, "YES")
+	field(SCAN, "10 second")
+	field(PHAS, "1") #phase is important here, otherwise it collects a zero from the units record
+	field(DOL, "$(DEV):PressureUnits PP")
+	field(OMSL, "closed_loop")
+	field(OUT, "$(DEV):Pressure.EGU")
+}
+
+# Solenoid valve status
+record(bi, "$(DEV):RVA"){
+	field(PINI, "YES")
+	field(DTYP, "stream")
+	field(INP, "@lc20.proto rv_rb(A) $(PORT)")
+	field(FLNK, "$(DEV):RVB")
+	field(ZNAM, "Closed")
+	field(ONAM, "Open")
+}
+record(bi, "$(DEV):RVB"){
+	field(DTYP, "stream")
+	field(INP, "@lc20.proto rv_rb(B) $(PORT)")
+	field(FLNK, "$(DEV):RVC")
+	field(ZNAM, "Closed")
+	field(ONAM, "Open")
+}
+record(bi, "$(DEV):RVC"){
+	field(DTYP, "stream")
+	field(INP, "@lc20.proto rv_rb(C) $(PORT)")
+	field(FLNK, "$(DEV):RVD")
+	field(ZNAM, "Closed")
+	field(ONAM, "Open")
+}
+record(bi, "$(DEV):RVD"){
+	field(DTYP, "stream")
+	field(INP, "@lc20.proto rv_rb(D) $(PORT)")
+	field(ZNAM, "Closed")
+
+}

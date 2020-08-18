@@ -1,0 +1,10 @@
+# iocAdmin autosave template
+# Format:
+# <PVNAME>
+# (Nothing to autosave for iocAdmin)
+# Autosave file for the LC20
+SXR:LC20:SDS:Run.VAL
+SXR:LC20:SDS:SetFlowRate.VAL
+# Autosave file for the LC20
+SXR:LC20:SDSB:Run.VAL
+SXR:LC20:SDSB:SetFlowRate.VAL

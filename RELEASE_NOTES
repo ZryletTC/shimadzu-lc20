@@ -1,0 +1,7 @@
+0.1.0
+Initial release. Features include remote serial control of an LC20AD/AT HPLC pump:
+Start/stop
+Pupmp status readback
+Pressure readback
+Flow setpoint control
+Solenoid valve control (no readback)

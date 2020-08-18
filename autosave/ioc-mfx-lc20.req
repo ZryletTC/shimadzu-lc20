@@ -1,0 +1,13 @@
+# iocAdmin autosave template
+# Format:
+# <PVNAME>
+# (Nothing to autosave for iocAdmin)
+# Autosave file for the LC20
+MFX:LC20:SDS:Run.VAL
+MFX:LC20:SDS:SetFlowRate.VAL
+# Autosave file for the LC20
+MFX:LC20:SDSB:Run.VAL
+MFX:LC20:SDSB:SetFlowRate.VAL
+# Autosave file for the LC20
+MFX:LC20:SDSC:Run.VAL
+MFX:LC20:SDSC:SetFlowRate.VAL

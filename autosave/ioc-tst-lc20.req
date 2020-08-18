@@ -1,0 +1,7 @@
+# iocAdmin autosave template
+# Format:
+# <PVNAME>
+# (Nothing to autosave for iocAdmin)
+# Autosave file for the LC20
+TST:LC20:01:Run.VAL
+TST:LC20:01:SetFlowRate.VAL

@@ -1,0 +1,4 @@
+# Template file for LC20 archiving
+$(DEV):FlowRate		1
+$(DEV):Pressure		1
+$(DEV):Status		1 monitor

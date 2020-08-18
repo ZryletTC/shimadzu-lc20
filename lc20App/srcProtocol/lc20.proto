@@ -1,0 +1,99 @@
+# SCL 10AVP Protocol
+# See IOC readme for explanation as to why this protocol is used (as opposed to one especially for the LD-20 or CBM-20)
+
+
+Terminator = CR LF;
+
+run_co {
+	out "KACT=%{-1=0|1=1}";
+	in "AK0";
+}
+
+run_rb {
+	out "MACT";
+	in "AM\?";
+}
+
+flowsp_co {
+	out "KA.FLOW=%1.4f";
+	in "AK0";
+}
+
+flowsp_rb {
+	out "GA.FLOW";
+	in "AG0%f";
+}
+
+flow_rb {
+	out "MA.FLOW";
+	in "AM0%f";
+}
+
+press_rb {
+	out "MA.PRES";
+	in "AM0%f";
+}
+
+setMaxPress {
+	out "KP.MAX=%1.4f";
+	in "AK0";
+}
+
+setMinPress {
+	out "KP.MIN=%1.4f";
+	in "AK0";
+}
+
+rbMaxPress {
+	out "GP.MAX";
+	in "AG0%f";
+}
+
+rbMinPress {
+	out "GP.MIN";
+	in "AG0%f";
+}
+
+status {
+	out "MSTATUS";
+	in "AM0%i";
+}
+
+error {
+	out "MERRCD";
+	in "AM0%i";
+}
+
+clear_error {
+	out "KERRCD";
+	in "AK0";
+}
+
+press {
+	out "GPRESS";
+	in "AG0%i";
+}
+
+press_set {
+	out "KPRESS=3";
+	in "AK0";
+}
+
+sv_co {
+	out "KPASV=%i";
+	in "AK0";
+}
+rv_rb {
+	out "MSV.A";
+	in "AM0%b";
+}
+
+mode {
+	out "KSLVMOD=%i";
+	in "AK0";
+}
+
+mode_rb {
+	out "MSLVMOD";
+	in "AM%i";
+}
